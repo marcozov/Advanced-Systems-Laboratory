@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;;
 
 public class MyMiddleware {
@@ -47,6 +48,7 @@ public class MyMiddleware {
 				System.out.println("before receiving a message");
 
 				Socket clientSocket = socket.accept();
+				InetSocketAddress clientAddress = (InetSocketAddress)clientSocket.getRemoteSocketAddress();
 				
 				String message = receiveMessage(clientSocket);
 				CommandParsingResult parsedMessage = new CommandParsingResult(message);
@@ -81,7 +83,7 @@ public class MyMiddleware {
 						String dataBlock = value.substring(0, bytes);
 						parsedMessage.setValue(dataBlock);
 						
-						set(parsedMessage);
+						set(parsedMessage, clientAddress);
 						break; 
 					}
 					default:
@@ -113,14 +115,14 @@ public class MyMiddleware {
 		return null;
 	}
 
-	public void set(CommandParsingResult command) throws UnknownHostException, IOException {
+	public void set(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {
 		for (InetSocketAddress server : this.mcAddresses) {
-			writeValue(command, server);
+			writeValue(command, server, client);
 		}
 	}
 	
 	// TODO: handle all this with an IP_ADDRESS specific type (net library or something like that)
-	private void writeValue(CommandParsingResult command, InetSocketAddress server) throws UnknownHostException, IOException  {
+	private void writeValue(CommandParsingResult command, InetSocketAddress server, InetSocketAddress client) throws UnknownHostException, IOException  {
 		System.out.println("Sending stuff to " + server.getAddress().toString() + ":" + server.getPort());
 		
 		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
@@ -145,6 +147,9 @@ public class MyMiddleware {
 		if (noReply == null) {
 			String reply = receiveMessageFromServer(kkSocket);
 			System.out.println("this is the reply: " + reply);
+			Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
+			OutputStream os = new DataOutputStream(clientSocket.getOutputStream());
+			os.write(reply.getBytes());
 		}
 	}
 	

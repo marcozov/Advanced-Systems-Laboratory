@@ -65,8 +65,11 @@ public class MyMiddleware {
 				switch (command) {
 					case "get": {
 						System.out.println("This is a get!");
-						String key = keys.get(0);
-						String value = this.get(key);
+						if (keys.size() == 1) {
+							String value = this.get(parsedMessage);
+						}
+						
+						//List<String> value = this.get(parsedMessage, clientAddress);
 						break;
 					}
 					case "set": {
@@ -96,23 +99,36 @@ public class MyMiddleware {
 		}
 	}	
 	
-	public String get(String key) {
-		String server = this.chooseServer();
+	public String get(CommandParsingResult command) throws UnknownHostException, IOException {
+		InetSocketAddress server = this.chooseServer();
+		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
+		OutputStream out = new DataOutputStream(kkSocket.getOutputStream());
+		String commandToSend = command.getCommand() + " " + String.join(" ", command.getKeys()) + '\r' + '\n';
+		out.write(commandToSend.getBytes());
+		
+		String reply = receiveMessageFromServer(kkSocket);
+		System.out.println("reply from the server (GET):" + reply);
 		return null;
 	}
 	
-	public List<String> get(List<String> keys) {
-		List<String> values = null;
+	public List<String> get(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {
+		/*
+		List<String> values = new ArrayList<String>();
 		for (String key : keys) {
 			String value = get(key);
+			Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
+			OutputStream os = new DataOutputStream(clientSocket.getOutputStream());
+			os.write(value.getBytes());
 			values.add(value);
 		}
+		return values;
+		*/
 		return null;
 	}
 	
-	private String chooseServer() {
+	private InetSocketAddress chooseServer() {
 		// TODO Auto-generated method stub
-		return null;
+		return mcAddresses.get(0);
 	}
 
 	public void set(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {

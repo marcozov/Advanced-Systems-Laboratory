@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;;
 
 public class MyMiddleware {
@@ -50,7 +51,13 @@ public class MyMiddleware {
 				Socket clientSocket = socket.accept();
 				InetSocketAddress clientAddress = (InetSocketAddress)clientSocket.getRemoteSocketAddress();
 				
-				String message = receiveMessage(clientSocket);
+				System.out.println("wat");
+				//clientSocket.setSoTimeout(1000);
+				
+				//String message = receiveMessage(clientSocket);
+				String message = receiveTextLine(clientSocket);
+				
+				System.out.println("wtf");
 				CommandParsingResult parsedMessage = new CommandParsingResult(message);
 				String command = parsedMessage.getCommand();
 				if (command == null) {
@@ -98,7 +105,7 @@ public class MyMiddleware {
 			e.printStackTrace();
 		}
 	}	
-	
+
 	public String get(CommandParsingResult command) throws UnknownHostException, IOException {
 		InetSocketAddress server = this.chooseServer();
 		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
@@ -106,7 +113,10 @@ public class MyMiddleware {
 		String commandToSend = command.getCommand() + " " + String.join(" ", command.getKeys()) + '\r' + '\n';
 		out.write(commandToSend.getBytes());
 		
-		String reply = receiveMessageFromServer(kkSocket);
+		//String reply = receiveMessageFromServer(kkSocket);
+		//String reply = receiveMessage(kkSocket);
+		//String reply = receiveUnstructuredData(kkSocket, command.getBytes());
+		String reply = receiveTextLine(kkSocket);
 		System.out.println("reply from the server (GET):" + reply);
 		return null;
 	}
@@ -169,6 +179,44 @@ public class MyMiddleware {
 		}
 	}
 	
+	private String receiveTextLine(Socket clientSocket) throws IOException {
+		InputStream is = new DataInputStream(clientSocket.getInputStream());
+		byte[] b = new byte[4096];
+		
+		int readByte = is.read();
+		int i=0;
+		while(readByte > -1) {
+			if (readByte == '\r') {
+				b[i] = (byte)readByte;
+				readByte = is.read();
+				i++;
+				if (readByte == '\n') {
+					b[i] = (byte)readByte;
+					break;
+				} else {
+					continue;
+				}
+			}
+			
+			b[i] = (byte)readByte;
+			System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
+			
+			readByte = is.read();
+			i++;
+		}
+		String message = new String(b);
+		System.out.println("number of characters read: " + i); // read characters
+		return message;
+	}
+	
+	public String receiveUnstructuredData(Socket socket, int len) throws IOException {
+		InputStream is = new DataInputStream(socket.getInputStream());
+		byte[] b = new byte[4096];
+		
+		is.read(b, 0, len);
+		return new String(b);
+	}
+	
 	public String receiveMessage(Socket clientSocket) throws IOException {
 		InputStream is = new DataInputStream(clientSocket.getInputStream());
 		System.out.println("after receiving a message");
@@ -179,8 +227,11 @@ public class MyMiddleware {
 		while(readByte > -1) {
 			b[i] = (byte)readByte;
 			System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
-			
-			readByte = is.read();
+			try {
+				readByte = is.read();
+			} catch (SocketTimeoutException e) {
+				break;
+			}
 			i++;
 		}
 		String message = new String(b);

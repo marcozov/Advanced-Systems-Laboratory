@@ -122,7 +122,7 @@ public class MyMiddleware {
 		int len = replyParser.getBytes();
 		
 		String value = receiveUnstructuredData(kkSocket, len);
-		System.out.println(value);
+		System.out.println("value: " + value);
 		
 		//Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
 		OutputStream os = new DataOutputStream(client.getOutputStream());
@@ -219,6 +219,7 @@ public class MyMiddleware {
 	}
 	
 	public String receiveUnstructuredData(Socket socket, int len) throws IOException {
+		System.out.println("receiving unstructured data");
 		InputStream is = new DataInputStream(socket.getInputStream());
 		byte[] b = new byte[4096];
 		

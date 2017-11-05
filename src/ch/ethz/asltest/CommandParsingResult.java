@@ -18,6 +18,7 @@ public class CommandParsingResult {
 		// convert these to constants
 		// why $ is not accepted in the regex?
 		String getRegex = "^(get)\\s((\\w+)(\\s\\w+)*)\r\n";
+		String getReplyRegex = "^(VALUE)\\s(\\w+)\\s(\\d+)\\s(\\d+)\r\n";
 		String setRegex = "^(set)\\s(\\w+)\\s(\\d+)\\s(-?\\d+)\\s(\\d+)(\\s(noreply))?\r\n(.+)";
 				
 		String command = null;
@@ -52,6 +53,17 @@ public class CommandParsingResult {
 			noreply = setMatcher.group(7);
 				
 			value = setMatcher.group(8);
+		}
+		
+		Pattern getReplyPattern = Pattern.compile(getReplyRegex);
+		Matcher getReplyMatcher = getReplyPattern.matcher(fullCommand);
+		while(getReplyMatcher.find()) {
+			System.out.println("get reply ciao da nadia.");
+			
+			command = getReplyMatcher.group(1);
+			keys = Arrays.asList(getReplyMatcher.group(2));
+			flags = Short.parseShort(getReplyMatcher.group(3));
+			bytes = Integer.parseInt(getReplyMatcher.group(4));
 		}
 
 		this.command = command;

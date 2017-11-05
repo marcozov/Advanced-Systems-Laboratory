@@ -117,7 +117,11 @@ public class MyMiddleware {
 		//String reply = receiveMessage(kkSocket);
 		//String reply = receiveUnstructuredData(kkSocket, command.getBytes());
 		String reply = receiveTextLine(kkSocket);
-		System.out.println("reply from the server (GET):" + reply);
+		CommandParsingResult replyParser = new CommandParsingResult (reply);
+		System.out.println("reply from the server (GET):" + replyParser);
+		int len = replyParser.getBytes();
+		
+		String value = receiveUnstructuredData(kkSocket, len);
 		return null;
 	}
 	

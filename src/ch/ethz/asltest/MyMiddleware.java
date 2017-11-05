@@ -73,7 +73,7 @@ public class MyMiddleware {
 					case "get": {
 						System.out.println("This is a get!");
 						if (keys.size() == 1) {
-							String value = this.get(parsedMessage, clientAddress);
+							String value = this.get(parsedMessage, clientSocket);
 						}
 						
 						//List<String> value = this.get(parsedMessage, clientAddress);
@@ -106,7 +106,7 @@ public class MyMiddleware {
 		}
 	}	
 
-	public String get(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {
+	public String get(CommandParsingResult command, Socket client) throws UnknownHostException, IOException {
 		InetSocketAddress server = this.chooseServer();
 		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
 		OutputStream out = new DataOutputStream(kkSocket.getOutputStream());

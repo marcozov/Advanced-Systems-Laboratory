@@ -124,8 +124,8 @@ public class MyMiddleware {
 		String value = receiveUnstructuredData(kkSocket, len);
 		System.out.println(value);
 		
-		Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
-		OutputStream os = new DataOutputStream(clientSocket.getOutputStream());
+		//Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
+		OutputStream os = new DataOutputStream(client.getOutputStream());
 		os.write(value.getBytes());
 		return value;
 	}

@@ -73,7 +73,7 @@ public class MyMiddleware {
 					case "get": {
 						System.out.println("This is a get!");
 						if (keys.size() == 1) {
-							String value = this.get(parsedMessage);
+							String value = this.get(parsedMessage, clientAddress);
 						}
 						
 						//List<String> value = this.get(parsedMessage, clientAddress);
@@ -106,7 +106,7 @@ public class MyMiddleware {
 		}
 	}	
 
-	public String get(CommandParsingResult command) throws UnknownHostException, IOException {
+	public String get(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {
 		InetSocketAddress server = this.chooseServer();
 		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
 		OutputStream out = new DataOutputStream(kkSocket.getOutputStream());
@@ -123,10 +123,14 @@ public class MyMiddleware {
 		
 		String value = receiveUnstructuredData(kkSocket, len);
 		System.out.println(value);
-		return null;
+		
+		Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
+		OutputStream os = new DataOutputStream(clientSocket.getOutputStream());
+		os.write(value.getBytes());
+		return value;
 	}
 	
-	public List<String> get(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {
+//	public List<String> get(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {
 		/*
 		List<String> values = new ArrayList<String>();
 		for (String key : keys) {
@@ -138,8 +142,8 @@ public class MyMiddleware {
 		}
 		return values;
 		*/
-		return null;
-	}
+//		return null;
+//	}
 	
 	private InetSocketAddress chooseServer() {
 		// TODO Auto-generated method stub

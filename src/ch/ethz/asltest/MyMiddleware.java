@@ -122,6 +122,7 @@ public class MyMiddleware {
 		int len = replyParser.getBytes();
 		
 		String value = receiveUnstructuredData(kkSocket, len);
+		System.out.println(value);
 		return null;
 	}
 	

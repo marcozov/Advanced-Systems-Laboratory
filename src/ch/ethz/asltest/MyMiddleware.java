@@ -123,6 +123,7 @@ public class MyMiddleware {
 		
 		String value = receiveUnstructuredData(kkSocket, len);
 		System.out.println("value: " + value);
+		value = "test";
 		
 		//Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
 		OutputStream os = new DataOutputStream(client.getOutputStream());

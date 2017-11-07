@@ -125,7 +125,7 @@ public class MyMiddleware {
 		System.out.println("value: " + value);
 		String valueToSend1 = replyParser.getCommand() + " " + replyParser.getKeys().get(0) + " " +
 							replyParser.getFlags() + " " + replyParser.getBytes() + '\r' + '\n';
-		String valueToSend2 =  value + '\r' + '\n' + "END";
+		String valueToSend2 =  value + '\r' + '\n' + "END" + '\r' + '\n';
 		
 		System.out.println("sending: " + valueToSend1);
 		System.out.println("sending: " + valueToSend2);

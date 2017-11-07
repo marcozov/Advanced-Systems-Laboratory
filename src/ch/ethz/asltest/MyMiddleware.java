@@ -123,13 +123,16 @@ public class MyMiddleware {
 		
 		String value = receiveUnstructuredData(kkSocket, len);
 		System.out.println("value: " + value);
-		String valueToSend = replyParser.getCommand() + " " + replyParser.getKeys().get(0) + " " +
-							replyParser.getFlags() + " " + replyParser.getBytes() + '\r' + '\n' + value + '\r' + '\n';
+		String valueToSend1 = replyParser.getCommand() + " " + replyParser.getKeys().get(0) + " " +
+							replyParser.getFlags() + " " + replyParser.getBytes() + '\r' + '\n';
+		String valueToSend2 =  value + '\r' + '\n';
 		
-		System.out.println("sending: " + valueToSend);
+		System.out.println("sending: " + valueToSend1);
+		System.out.println("sending: " + valueToSend2);
 		//Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
 		OutputStream os = new DataOutputStream(client.getOutputStream());
-		os.write(valueToSend.getBytes());
+		os.write(valueToSend1.getBytes());
+		os.write(valueToSend2.getBytes());
 		return value;
 	}
 	

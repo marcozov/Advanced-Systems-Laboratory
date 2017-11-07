@@ -125,7 +125,8 @@ public class MyMiddleware {
 		System.out.println("value: " + value);
 		String valueToSend1 = replyParser.getCommand() + " " + replyParser.getKeys().get(0) + " " +
 							replyParser.getFlags() + " " + replyParser.getBytes() + '\r' + '\n';
-		String valueToSend2 =  value + '\r' + '\n' + "END" + '\r' + '\n';
+		String valueToSend2 =  value + '\r' + '\n';
+		String valueToSend3 = "END" + '\r' + '\n';
 		
 		System.out.println("sending: " + valueToSend1);
 		System.out.println("sending: " + valueToSend2);
@@ -133,6 +134,7 @@ public class MyMiddleware {
 		OutputStream os = new DataOutputStream(client.getOutputStream());
 		os.write(valueToSend1.getBytes());
 		os.write(valueToSend2.getBytes());
+		os.write(valueToSend3.getBytes());
 		return value;
 	}
 	

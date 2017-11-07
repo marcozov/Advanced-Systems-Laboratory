@@ -123,11 +123,12 @@ public class MyMiddleware {
 		
 		String value = receiveUnstructuredData(kkSocket, len);
 		System.out.println("value: " + value);
-		value = "test";
+		String valueToSend = replyParser.getCommand() + " " + replyParser.getKeys().get(0) + " " +
+							replyParser.getFlags() + " " + replyParser.getBytes() + '\r' + '\n' + value + '\r' + '\n';
 		
 		//Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
 		OutputStream os = new DataOutputStream(client.getOutputStream());
-		os.write(value.getBytes());
+		os.write(valueToSend.getBytes());
 		return value;
 	}
 	
@@ -197,10 +198,12 @@ public class MyMiddleware {
 		int i=0;
 		while(readByte > -1) {
 			if (readByte == '\r') {
+				System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 				b[i] = (byte)readByte;
 				readByte = is.read();
 				i++;
 				if (readByte == '\n') {
+					System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 					b[i] = (byte)readByte;
 					break;
 				} else {

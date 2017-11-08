@@ -139,7 +139,7 @@ public class MyMiddleware {
 		os.flush();
 		os.write(valueToSend3.getBytes());
 		os.flush(); */
-		os.write(valueToSend3.getBytes());
+		os.write(valueToSend.getBytes());
 		return value;
 	}
 	

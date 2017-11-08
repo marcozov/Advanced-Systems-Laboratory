@@ -130,14 +130,16 @@ public class MyMiddleware {
 		
 		System.out.println("sending: " + valueToSend1);
 		System.out.println("sending: " + valueToSend2);
+		String valueToSend = valueToSend1 + valueToSend2 + valueToSend3;
 		//Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
 		OutputStream os = new DataOutputStream(client.getOutputStream());
-		os.write(valueToSend1.getBytes());
+		/*os.write(valueToSend1.getBytes());
 		os.flush();
 		os.write(valueToSend2.getBytes());
 		os.flush();
 		os.write(valueToSend3.getBytes());
-		os.flush();
+		os.flush(); */
+		os.write(valueToSend3.getBytes());
 		return value;
 	}
 	

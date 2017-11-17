@@ -113,9 +113,6 @@ public class MyMiddleware {
 		String commandToSend = command.getCommand() + " " + String.join(" ", command.getKeys()) + '\r' + '\n';
 		out.write(commandToSend.getBytes());
 		
-		//String reply = receiveMessageFromServer(kkSocket);
-		//String reply = receiveMessage(kkSocket);
-		//String reply = receiveUnstructuredData(kkSocket, command.getBytes());
 		String reply = receiveTextLine(kkSocket);
 		CommandParsingResult replyParser = new CommandParsingResult (reply);
 		System.out.println("reply from the server (GET):" + replyParser);
@@ -128,17 +125,8 @@ public class MyMiddleware {
 		String valueToSend2 =  value + '\r' + '\n';
 		String valueToSend3 = "END" + '\r' + '\n';
 		
-		System.out.println("sending: " + valueToSend1);
-		System.out.println("sending: " + valueToSend2);
 		String valueToSend = valueToSend1 + valueToSend2 + valueToSend3;
-		//Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
 		OutputStream os = new DataOutputStream(client.getOutputStream());
-		/*os.write(valueToSend1.getBytes());
-		os.flush();
-		os.write(valueToSend2.getBytes());
-		os.flush();
-		os.write(valueToSend3.getBytes());
-		os.flush(); */
 		os.write(valueToSend.getBytes());
 		return value;
 	}
@@ -239,7 +227,7 @@ public class MyMiddleware {
 		byte[] b = new byte[4096];
 		
 		is.read(b, 0, len);
-		return new String(b);
+		return new String(b, 0, len);
 	}
 	
 	public String receiveMessage(Socket clientSocket) throws IOException {

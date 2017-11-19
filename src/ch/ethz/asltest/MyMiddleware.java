@@ -3,6 +3,11 @@ package ch.ethz.asltest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.*;
+
+import ch.ethz.operations.CommandParser;
+import ch.ethz.operations.DataTransfer;
+import ch.ethz.operations.Operation;
+
 import java.util.List;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -17,6 +22,7 @@ public class MyMiddleware {
 	String ip;
 	int port;
 	List<InetSocketAddress> mcAddresses;
+	AbstractServer servers;
 	int numThreadsPTP;
 	boolean readSharded;
 	public MyMiddleware(String ip, int port, List<String> mcAddresses, int numThreadsPTP, boolean readSharded) throws UnknownHostException {
@@ -31,6 +37,7 @@ public class MyMiddleware {
 			this.mcAddresses.add(socket);
 			System.out.println("Sending stuff to " + socket.getAddress().getHostAddress().toString() + ":" + socket.getPort());
 		}
+		this.servers = new AbstractServer(this.mcAddresses);
 		this.numThreadsPTP = numThreadsPTP;
 		this.readSharded = readSharded;
 	}
@@ -44,7 +51,16 @@ public class MyMiddleware {
 		
 		try {
 			ServerSocket socket = new ServerSocket(this.port);
-			
+			while (true) {
+				System.out.println("before receiving a message (new implementation)");
+				
+				Socket clientSocket = socket.accept();
+				String message = DataTransfer.receiveTextLine(clientSocket);
+				Operation operation = CommandParser.getOperation(message, clientSocket, this.servers);
+				operation.execute();
+			}
+						
+			/*
 			while (true) {
 				System.out.println("before receiving a message");
 
@@ -57,7 +73,6 @@ public class MyMiddleware {
 				//String message = receiveMessage(clientSocket);
 				String message = receiveTextLine(clientSocket);
 				
-				System.out.println("wtf");
 				CommandParsingResult parsedMessage = new CommandParsingResult(message);
 				String command = parsedMessage.getCommand();
 				if (command == null) {
@@ -100,12 +115,14 @@ public class MyMiddleware {
 						System.out.format("Unsupported command: %s", command);
 				}
 			}
+			*/
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}	
 
+	/*
 	public String get(CommandParsingResult command, Socket client) throws UnknownHostException, IOException {
 		InetSocketAddress server = this.chooseServer();
 		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
@@ -131,21 +148,6 @@ public class MyMiddleware {
 		return value;
 	}
 	
-//	public List<String> get(CommandParsingResult command, InetSocketAddress client) throws UnknownHostException, IOException {
-		/*
-		List<String> values = new ArrayList<String>();
-		for (String key : keys) {
-			String value = get(key);
-			Socket clientSocket = new Socket(client.getAddress().getHostAddress().toString(), client.getPort());
-			OutputStream os = new DataOutputStream(clientSocket.getOutputStream());
-			os.write(value.getBytes());
-			values.add(value);
-		}
-		return values;
-		*/
-//		return null;
-//	}
-	
 	private InetSocketAddress chooseServer() {
 		// TODO Auto-generated method stub
 		return mcAddresses.get(0);
@@ -158,7 +160,7 @@ public class MyMiddleware {
 	}
 	
 	// TODO: handle all this with an IP_ADDRESS specific type (net library or something like that)
-	private void writeValue(CommandParsingResult command, InetSocketAddress server, InetSocketAddress client) throws UnknownHostException, IOException  {
+	private void writeValue(CommandParsingResult command, InetSocketAddress server, InetSocketAddress client) throws UnknownHostException, IOException {
 		System.out.println("Sending stuff to " + server.getAddress().toString() + ":" + server.getPort());
 		
 		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
@@ -254,17 +256,18 @@ public class MyMiddleware {
 	
 	public String receiveMessageFromServer(Socket clientSocket) throws IOException {
 		InputStream is = new DataInputStream(clientSocket.getInputStream());
-		System.out.println("after receiving a message");
 		byte[] b = new byte[4096];
 		
 		int readByte = is.read();
 		int i=0;
 		while(readByte > -1) {
 			if (readByte == '\r') {
+				System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 				b[i] = (byte)readByte;
 				readByte = is.read();
 				i++;
 				if (readByte == '\n') {
+					System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 					b[i] = (byte)readByte;
 					break;
 				} else {
@@ -282,4 +285,5 @@ public class MyMiddleware {
 		System.out.println("number of characters read: " + i); // read characters
 		return message;
 	}
+	*/
 }

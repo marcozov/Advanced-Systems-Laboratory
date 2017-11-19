@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ch.ethz.operations.Operation;
+
 public class CommandParsingResult {
 	String command;
 	List<String> keys;
@@ -13,6 +15,7 @@ public class CommandParsingResult {
 	Integer bytes = null;
 	String noreply = null;
 	String value = null;
+	Operation operation = null;
 	
 	public CommandParsingResult(String fullCommand) {
 		// convert these to constants

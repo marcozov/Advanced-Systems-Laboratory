@@ -20,23 +20,24 @@ public class Get extends Operation {
 	@Override
 	public String execute() throws UnknownHostException, IOException {
 		InetSocketAddress server = this.getServer();
-		Socket kkSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
-		OutputStream out = new DataOutputStream(kkSocket.getOutputStream());
+		Socket serverSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
+		OutputStream out = new DataOutputStream(serverSocket.getOutputStream());
 		out.write(this.getMessage().getBytes());
 		
-		String reply = DataTransfer.receiveTextLine(kkSocket);
+		String reply = DataTransfer.receiveTextLine(serverSocket);
 		parseAndCheckGetReply(reply);
 		
-		String valueRetrieved = DataTransfer.receiveUnstructuredData(kkSocket, super.getNumberOfBytes());
-		String end = DataTransfer.receiveTextLine(kkSocket);
+		String valueRetrieved = DataTransfer.receiveUnstructuredData(serverSocket, super.getNumberOfBytes());
+		String end = DataTransfer.receiveTextLine(serverSocket);
+		end = DataTransfer.receiveTextLine(serverSocket);
 		
-		
-		OutputStream os = new DataOutputStream(this.getClient().getOutputStream());
 		System.out.println("reply: " + reply + "len: " + reply.length());
 		System.out.println("end: " + end + "len: " + end.length());
 		end = "END" + '\r' + '\n';
 		System.out.println("valueRetrieved: " + valueRetrieved + "len: " + valueRetrieved.length());
 		System.out.println("sending back to the client: " + reply + valueRetrieved + '\r' + '\n');
+		
+		OutputStream os = new DataOutputStream(this.getClient().getOutputStream());
 		os.write((reply + valueRetrieved + '\r' + '\n' + end).getBytes());
 		return null;
 	}

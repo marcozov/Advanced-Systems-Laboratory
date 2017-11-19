@@ -30,7 +30,7 @@ public class Get extends Operation {
 		String valueRetrieved = DataTransfer.receiveUnstructuredData(kkSocket, super.getNumberOfBytes());
 		OutputStream os = new DataOutputStream(this.getClient().getOutputStream());
 		System.out.println("valueRetrieved: " + valueRetrieved + "len: " + valueRetrieved.length());
-		os.write((valueRetrieved + '\r' + '\n').getBytes());
+		os.write((reply + valueRetrieved + '\r' + '\n').getBytes());
 		return null;
 	}
 

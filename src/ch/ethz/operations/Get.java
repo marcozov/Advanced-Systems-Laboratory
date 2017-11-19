@@ -38,10 +38,10 @@ public class Get extends Operation {
 			os.write((reply + valueRetrieved).getBytes());
 
 			
-			String end = DataTransfer.receiveTextLine(serverSocket);
+			//String end = DataTransfer.receiveTextLine(serverSocket);
 			
 			System.out.println("reply: " + reply + "len: " + reply.length());
-			System.out.println("end: " + end + "len: " + end.length());
+			//System.out.println("end: " + end + "len: " + end.length());
 			System.out.println("valueRetrieved: " + valueRetrieved + "len: " + valueRetrieved.length());
 			System.out.println("sending back to the client: " + reply + valueRetrieved);
 			//os.write((reply + valueRetrieved + end).getBytes());

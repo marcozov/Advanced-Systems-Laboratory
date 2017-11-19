@@ -44,7 +44,7 @@ public final class DataTransfer {
 		InputStream is = new DataInputStream(socket.getInputStream());
 		byte[] b = new byte[4096];
 		
-		is.read(b, 0, len);
-		return new String(b, 0, len);
+		is.read(b, 0, len+2);
+		return new String(b, 0, len+2);
 	}
 }

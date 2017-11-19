@@ -33,10 +33,10 @@ public class Get extends Operation {
 		System.out.println("reply: " + reply + "len: " + reply.length());
 		System.out.println("end: " + end + "len: " + end.length());
 		System.out.println("valueRetrieved: " + valueRetrieved + "len: " + valueRetrieved.length());
-		System.out.println("sending back to the client: " + reply + valueRetrieved + '\r' + '\n');
+		System.out.println("sending back to the client: " + reply + valueRetrieved);
 		
 		OutputStream os = new DataOutputStream(this.getClient().getOutputStream());
-		os.write((reply + valueRetrieved + '\r' + '\n' + end).getBytes());
+		os.write((reply + valueRetrieved + end).getBytes());
 		return null;
 	}
 

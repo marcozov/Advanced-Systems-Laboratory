@@ -15,10 +15,12 @@ public final class DataTransfer {
 		int i=0;
 		while(readByte > -1) {
 			if (readByte == '\r') {
+				System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 				b[i] = (byte)readByte;
 				readByte = is.read();
 				i++;
 				if (readByte == '\n') {
+					System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 					b[i] = (byte)readByte;
 					break;
 				} else {

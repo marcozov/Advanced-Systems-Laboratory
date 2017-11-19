@@ -44,6 +44,7 @@ public class Set extends Operation {
 	public String execute() throws UnknownHostException, IOException {
 		String valueToWrite = DataTransfer.receiveUnstructuredData(this.getClient(), this.getNumberOfBytes());
 		String fullCommand = super.getMessage() + valueToWrite + '\r' + '\n';
+		System.out.println("fullCommand: " + fullCommand);
 		Socket clientSocket = super.getClient();
 		List<InetSocketAddress> servers = this.getServers();
 		boolean replyExpected = this.isReplyExpected();

@@ -10,7 +10,7 @@ import ch.ethz.operations.Operation;
 public final class CommandParser {
 	final static String getRegex = "^(get)\\s((\\w+)(\\s\\w+)*)\r\n";
 	//final String getReplyRegex = "^(VALUE)\\s(\\w+)\\s(\\d+)\\s(\\d+)\r\n";
-	final static String setRegex = "^(set)\\s(\\w+)\\s(\\d+)\\s(-?\\d+)\\s(\\d+)(\\s(noreply))?\r\n";
+	final static String setRegex = "^(set)\\s([\\w-]+)\\s(\\d+)\\s(-?\\d+)\\s(\\d+)(\\s(noreply))?\r\n";
 	private CommandParser() {}
 	
 	public static Operation getOperation(String message, Socket clientSocket, AbstractServer server) {

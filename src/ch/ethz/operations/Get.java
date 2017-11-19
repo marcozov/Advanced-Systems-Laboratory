@@ -32,19 +32,9 @@ public class Get extends Operation {
 				break;
 			}
 		
-			//String reply = DataTransfer.receiveTextLine(serverSocket);
 			parseAndCheckGetReply(reply);
 			String valueRetrieved = DataTransfer.receiveUnstructuredData(serverSocket, super.getNumberOfBytes());
 			os.write((reply + valueRetrieved).getBytes());
-
-			
-			//String end = DataTransfer.receiveTextLine(serverSocket);
-			
-			System.out.println("reply: " + reply + "len: " + reply.length());
-			//System.out.println("end: " + end + "len: " + end.length());
-			System.out.println("valueRetrieved: " + valueRetrieved + "len: " + valueRetrieved.length());
-			System.out.println("sending back to the client: " + reply + valueRetrieved);
-			//os.write((reply + valueRetrieved + end).getBytes());
 
 			reply = DataTransfer.receiveTextLine(serverSocket);
 		}
@@ -57,7 +47,6 @@ public class Get extends Operation {
 		Pattern getReplyPattern = Pattern.compile(getReplyRegex);
 		Matcher getReplyMatcher = getReplyPattern.matcher(reply);
 		while(getReplyMatcher.find()) {
-			System.out.println("get reply ciao da nadia.");
 			this.setNumberOfBytes(Integer.parseInt(getReplyMatcher.group(4)));
 		}
 	}

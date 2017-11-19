@@ -25,7 +25,7 @@ public class Set extends Operation {
 
 	@Override
 	protected void parseParametersAndCheckFormat(String message) {
-		String setRegex = "^(set)\\s(\\w+)\\s(\\d+)\\s(-?\\d+)\\s(\\d+)(\\s(noreply))?\r\n";
+		String setRegex = CommandParser.setRegex;
 		Pattern setPattern = Pattern.compile(setRegex);
 		Matcher setMatcher = setPattern.matcher(message);
 

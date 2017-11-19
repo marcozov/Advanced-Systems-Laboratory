@@ -24,19 +24,31 @@ public class Get extends Operation {
 		OutputStream out = new DataOutputStream(serverSocket.getOutputStream());
 		out.write(this.getMessage().getBytes());
 		
-		String reply = DataTransfer.receiveTextLine(serverSocket);
-		parseAndCheckGetReply(reply);
-		
-		String valueRetrieved = DataTransfer.receiveUnstructuredData(serverSocket, super.getNumberOfBytes());
-		String end = DataTransfer.receiveTextLine(serverSocket);
-		
-		System.out.println("reply: " + reply + "len: " + reply.length());
-		System.out.println("end: " + end + "len: " + end.length());
-		System.out.println("valueRetrieved: " + valueRetrieved + "len: " + valueRetrieved.length());
-		System.out.println("sending back to the client: " + reply + valueRetrieved);
-		
 		OutputStream os = new DataOutputStream(this.getClient().getOutputStream());
-		os.write((reply + valueRetrieved + end).getBytes());
+		String reply = DataTransfer.receiveTextLine(serverSocket);
+		while (true) {
+			if (reply.equals("END" + '\r' + '\n')) {
+				os.write(reply.getBytes());
+				break;
+			}
+		
+			//String reply = DataTransfer.receiveTextLine(serverSocket);
+			parseAndCheckGetReply(reply);
+			String valueRetrieved = DataTransfer.receiveUnstructuredData(serverSocket, super.getNumberOfBytes());
+			os.write((reply + valueRetrieved).getBytes());
+
+			
+			String end = DataTransfer.receiveTextLine(serverSocket);
+			
+			System.out.println("reply: " + reply + "len: " + reply.length());
+			System.out.println("end: " + end + "len: " + end.length());
+			System.out.println("valueRetrieved: " + valueRetrieved + "len: " + valueRetrieved.length());
+			System.out.println("sending back to the client: " + reply + valueRetrieved);
+			//os.write((reply + valueRetrieved + end).getBytes());
+
+			reply = DataTransfer.receiveTextLine(serverSocket);
+		}
+		
 		return null;
 	}
 

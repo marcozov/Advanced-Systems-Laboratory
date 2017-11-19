@@ -44,7 +44,7 @@ public class MyMiddleware {
 	
 	public void run() {
 		// TODO: add a library for logs (e.g. log4j) and replace all the useful prints with log statements
-		System.out.println("hello middleware!");
+		System.out.println("hello middleware! (new!)");
 		System.out.format("my network socket: %s:%d\n", ip, port);
 		
 		System.out.println(Arrays.toString(mcAddresses.toArray()));

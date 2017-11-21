@@ -50,8 +50,8 @@ public class MyMiddleware {
 		System.out.println(Arrays.toString(mcAddresses.toArray()));
 		
 		try {
-			//ServerSocket socket = new ServerSocket(this.port);
-			Socket clientSocket = new Socket("127.0.0.1", this.port);
+			ServerSocket socket = new ServerSocket(this.port);
+			Socket clientSocket = socket.accept();
 			while (true) {
 				System.out.println("before receiving a message (new implementation)");
 				//Socket clientSocket = socket.accept();

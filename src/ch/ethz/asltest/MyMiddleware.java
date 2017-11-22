@@ -59,6 +59,7 @@ public class MyMiddleware {
 		while (true) {
 			Socket clientSocket = null;
 			try {
+				System.out.println("before socket.accept");
 				clientSocket = socket.accept();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

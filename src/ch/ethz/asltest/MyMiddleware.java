@@ -48,7 +48,27 @@ public class MyMiddleware {
 		System.out.format("my network socket: %s:%d\n", ip, port);
 		
 		System.out.println(Arrays.toString(mcAddresses.toArray()));
+		ServerSocket socket = null;
+		try {
+			socket = new ServerSocket(this.port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		while (true) {
+			Socket clientSocket = null;
+			try {
+				clientSocket = socket.accept();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			new OperationThread(clientSocket, this.servers).start();
+		}
 		
+	/*
 		try {
 			ServerSocket socket = new ServerSocket(this.port);
 			Socket clientSocket = socket.accept();
@@ -63,5 +83,6 @@ public class MyMiddleware {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+	*/
 	}
 }

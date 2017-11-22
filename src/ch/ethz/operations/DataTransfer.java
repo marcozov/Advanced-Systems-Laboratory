@@ -8,6 +8,7 @@ import java.net.Socket;
 public final class DataTransfer {
 	public static String receiveTextLine(Socket socket) throws IOException {
 		InputStream is = new DataInputStream(socket.getInputStream());
+		
 		System.out.println("after receiving a message");
 		byte[] b = new byte[4096];
 		

@@ -22,6 +22,9 @@ public class OperationThread extends Thread {
 		while (true) {
 			try {
 				message = DataTransfer.receiveTextLine(clientSocket);
+				if(message.length() == 0) {
+					continue;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -23,6 +23,7 @@ public final class DataTransfer {
 				if (readByte == '\n') {
 					System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 					b[i] = (byte)readByte;
+					i++;
 					break;
 				} else {
 					continue;
@@ -35,7 +36,7 @@ public final class DataTransfer {
 			readByte = is.read();
 			i++;
 		}
-		String message = new String(b, 0, i+1);
+		String message = new String(b, 0, i);
 		System.out.println("number of characters read: " + i); // read characters
 		return message;
 	}

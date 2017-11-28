@@ -19,18 +19,20 @@ public class OperationThread extends Thread {
 	
 	public void run() {
 		String message = null;
-		try {
-			message = DataTransfer.receiveTextLine(clientSocket);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Operation operation = CommandParser.getOperation(message, clientSocket, this.servers);
-		try {
-			operation.execute();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		while (true) {
+			try {
+				message = DataTransfer.receiveTextLine(clientSocket);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Operation operation = CommandParser.getOperation(message, clientSocket, this.servers);
+			try {
+				operation.execute();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

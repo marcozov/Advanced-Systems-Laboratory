@@ -23,7 +23,7 @@ public class OperationThread extends Thread {
 			try {
 				message = DataTransfer.receiveTextLine(clientSocket);
 				if(message.length() == 0) {
-					continue;
+					break;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

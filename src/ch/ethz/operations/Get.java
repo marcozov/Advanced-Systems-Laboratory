@@ -43,8 +43,7 @@ public class Get extends Operation {
 	}
 
 	private void parseAndCheckGetReply(String reply) {
-		String getReplyRegex = "^(VALUE)\\s(\\w+)\\s(\\d+)\\s(\\d+)\r\n";
-		Pattern getReplyPattern = Pattern.compile(getReplyRegex);
+		Pattern getReplyPattern = Pattern.compile(CommandParser.getReplyRegex);
 		Matcher getReplyMatcher = getReplyPattern.matcher(reply);
 		while(getReplyMatcher.find()) {
 			this.setNumberOfBytes(Integer.parseInt(getReplyMatcher.group(4)));

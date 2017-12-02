@@ -17,7 +17,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 public class MyMiddleware {
 	String ip;

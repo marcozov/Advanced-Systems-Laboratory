@@ -31,7 +31,7 @@ public class MyMiddleware {
 	
 	public MyMiddleware(String ip, int port, List<String> mcAddresses, int numThreadsPTP, boolean readSharded) throws UnknownHostException {
 		logger.error("testing log");
-		logger.info("info test");
+		logger.info("info test 2");
 		this.ip = ip;
 		this.port = port;
 		this.mcAddresses = new ArrayList<InetSocketAddress>();

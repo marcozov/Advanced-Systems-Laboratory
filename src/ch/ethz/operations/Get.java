@@ -13,14 +13,15 @@ import java.util.regex.Pattern;
 import ch.ethz.asltest.AbstractServer;
 
 public class Get extends Operation {
+	InetSocketAddress chosenServer;
 	public Get(String message, Socket clientSocket, AbstractServer server) {
 		super(message, clientSocket, server);
+		this.chosenServer = this.getServer();
 	}
 	
 	@Override
 	public String execute() throws UnknownHostException, IOException {
-		InetSocketAddress server = this.getServer();
-		Socket serverSocket = new Socket(server.getAddress().getHostAddress().toString(), server.getPort());
+		Socket serverSocket = new Socket(this.chosenServer.getAddress().getHostAddress().toString(), this.chosenServer.getPort());
 		OutputStream out = new DataOutputStream(serverSocket.getOutputStream());
 		out.write(this.getMessage().getBytes());
 		

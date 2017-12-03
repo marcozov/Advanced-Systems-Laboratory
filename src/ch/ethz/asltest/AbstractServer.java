@@ -5,6 +5,7 @@ import java.util.List;
 
 public class AbstractServer {
 	List<InetSocketAddress> mcAddresses;
+	private int getCounter;
 	
 	public AbstractServer(List<InetSocketAddress> mcAddresses) {
 		this.mcAddresses = mcAddresses;
@@ -17,6 +18,18 @@ public class AbstractServer {
 	//TODO: implement round robin policy for GET operations
 	// concurrency should be handled as well
 	public InetSocketAddress getNextServer() {
-		return this.mcAddresses.get(0);
+		InetSocketAddress mcAddress = this.getAllServers().get((this.getCounter()));
+		//return this.mcAddresses.get(0);
+		return mcAddress;
+	}
+
+	// round-robin load balancer for servers
+	private int getCounter() {
+		if (this.getCounter < this.getAllServers().size() - 1) {
+			this.getCounter = this.getCounter + 1;
+		} else {
+			this.getCounter = 0;
+		}
+		return this.getCounter;
 	}
 }

@@ -19,7 +19,6 @@ public class AbstractServer {
 	// concurrency should be handled as well
 	public InetSocketAddress getNextServer() {
 		InetSocketAddress mcAddress = this.getAllServers().get((this.getCounter()));
-		//return this.mcAddresses.get(0);
 		return mcAddress;
 	}
 

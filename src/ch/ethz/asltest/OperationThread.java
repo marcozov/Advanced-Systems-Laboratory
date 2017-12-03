@@ -28,7 +28,7 @@ public class OperationThread extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Operation operation = CommandParser.getOperation(message, clientSocket, this.servers);
+			Operation operation = CommandParser.getOperation(message, clientSocket, this.servers);			
 			try {
 				operation.execute();
 			} catch (UnknownHostException e) {

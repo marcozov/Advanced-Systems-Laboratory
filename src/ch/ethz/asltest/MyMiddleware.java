@@ -1,5 +1,6 @@
 package ch.ethz.asltest;
 
+import java.util.AbstractQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.*;
@@ -9,6 +10,7 @@ import ch.ethz.operations.DataTransfer;
 import ch.ethz.operations.Operation;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.io.*;
@@ -28,6 +30,10 @@ public class MyMiddleware {
 	int numThreadsPTP;
 	boolean readSharded;
 	private static final Logger logger = LogManager.getLogger(MyMiddleware.class);
+	
+	public static Logger getLogger() {
+		return MyMiddleware.logger;
+	}
 	
 	public MyMiddleware(String ip, int port, List<String> mcAddresses, int numThreadsPTP, boolean readSharded) throws UnknownHostException {
 		logger.error("testing log");
@@ -62,11 +68,19 @@ public class MyMiddleware {
 			e.printStackTrace();
 		}
 
+		AbstractQueue<Socket> requests = new ConcurrentLinkedQueue<Socket>();
+		// net-thread
 		while (true) {
+			
+			// should start dealing with the worker threads: they all start running when the daemon starts
+			// Then, the net-thread will pass the incoming requests to these threads
+			// Which request should be passed to which thread? Put them in a container, then each working thread
+			// will take one request when it is "free".
 			Socket clientSocket = null;
 			try {
 				System.out.println("before socket.accept");
 				clientSocket = socket.accept();
+				requests.add(clientSocket);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

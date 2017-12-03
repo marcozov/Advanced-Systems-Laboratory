@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Advanced-Systems-Laboratory">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="C:/Users/marco/workspace"/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/middleware-eclipse.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="ch.ethz.asltest.RunMW"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="D:/EPFL/Advanced Systems Laboratory/Advanced-Systems-Laboratory/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/EPFL/Advanced Systems Laboratory/apache-log4j-2.9.1-bin/apache-log4j-2.9.1-bin/log4j-api-2.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/EPFL/Advanced Systems Laboratory/apache-log4j-2.9.1-bin/apache-log4j-2.9.1-bin/log4j-core-2.9.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/EPFL/Advanced Systems Laboratory/apache-log4j-2.9.1-bin/apache-log4j-2.9.1-bin/log4j-core-2.9.1-javadoc.jar"/>
+        </jar>
+    </target>
+</project>

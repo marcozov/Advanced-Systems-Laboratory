@@ -19,6 +19,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import org.apache.logging.log4j.*;
 
+
 public class MyMiddleware {
 	String ip;
 	int port;
@@ -29,7 +30,8 @@ public class MyMiddleware {
 	private static final Logger logger = LogManager.getLogger(MyMiddleware.class);
 	
 	public MyMiddleware(String ip, int port, List<String> mcAddresses, int numThreadsPTP, boolean readSharded) throws UnknownHostException {
-		logger.error("testing log");;
+		logger.error("testing log");
+		logger.info("info test");
 		this.ip = ip;
 		this.port = port;
 		this.mcAddresses = new ArrayList<InetSocketAddress>();

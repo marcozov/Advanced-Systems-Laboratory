@@ -1,6 +1,6 @@
 package ch.ethz.asltest;
 
-import java.util.AbstractQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.*;
@@ -11,7 +11,7 @@ import ch.ethz.operations.Operation;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.LogManager;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.io.*;
@@ -69,44 +69,32 @@ public class MyMiddleware {
 			e.printStackTrace();
 		}
 
-		AbstractQueue<Socket> requests = new ConcurrentLinkedQueue<Socket>();
+		BlockingQueue<Socket> requests = new LinkedBlockingQueue<Socket>();
+		
+		// start the worker threads
+		for (int i=0; i<this.numThreadsPTP; i++) {
+			new WorkerThread(requests, this.servers, i).start();
+		}
+		
 		// net-thread
 		while (true) {
-			
-			// should start dealing with the worker threads: they all start running when the daemon starts
-			// Then, the net-thread will pass the incoming requests to these threads
-			// Which request should be passed to which thread? Put them in a container, then each working thread
-			// will take one request when it is "free".
 			Socket clientSocket = null;
 			try {
-				System.out.println("before socket.accept");
+				//System.out.println("before socket.accept");
 				clientSocket = socket.accept();
-				// add a new request to the waiting list --> needs to be passed to a worker thread in order to be fulfilled
+				System.out.println("New request: " + clientSocket);
 				requests.add(clientSocket);
+				
+				//System.out.println("before printing requests");
+				for (Socket s : requests) {
+					System.out.println(s.toString());
+				}
+				//System.out.println("after printing requests");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			// this should be done by each worker thread
-			//new OperationThread(clientSocket, this.servers).start();
 		}
-		
-	/*
-		try {
-			ServerSocket socket = new ServerSocket(this.port);
-			Socket clientSocket = socket.accept();
-			while (true) {
-				System.out.println("before receiving a message (new implementation)");
-				//Socket clientSocket = socket.accept();
-				String message = DataTransfer.receiveTextLine(clientSocket);
-				Operation operation = CommandParser.getOperation(message, clientSocket, this.servers);
-				operation.execute();
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	*/
 	}
+	
 }

@@ -8,11 +8,11 @@ import ch.ethz.operations.CommandParser;
 import ch.ethz.operations.DataTransfer;
 import ch.ethz.operations.Operation;
 
-public class OperationThread extends Thread {	
+public class OperationWrapper {
 	Socket clientSocket;
 	AbstractServer servers;
 	
-	public OperationThread (Socket socket, AbstractServer servers) {
+	public OperationWrapper (Socket socket, AbstractServer servers) {
 		this.clientSocket = socket;
 		this.servers = servers;
 	}

@@ -7,21 +7,23 @@ import java.net.Socket;
 
 public final class DataTransfer {
 	public static String receiveTextLine(Socket socket) throws IOException {
+		
+		
 		InputStream is = new DataInputStream(socket.getInputStream());
 		
-		System.out.println("after receiving a message");
+		//System.out.println("after receiving a message - wat");
 		byte[] b = new byte[4096];
 		
 		int readByte = is.read();
 		int i=0;
 		while(readByte > -1) {
 			if (readByte == '\r') {
-				System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
+				//System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 				b[i] = (byte)readByte;
 				readByte = is.read();
 				i++;
 				if (readByte == '\n') {
-					System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
+					//System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 					b[i] = (byte)readByte;
 					i++;
 					break;
@@ -31,18 +33,19 @@ public final class DataTransfer {
 			}
 			
 			b[i] = (byte)readByte;
-			System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
+			//System.out.format("read byte: %c. Int: %d\n", readByte, readByte);
 			
 			readByte = is.read();
 			i++;
 		}
 		String message = new String(b, 0, i);
-		System.out.println("number of characters read: " + i); // read characters
+		//System.out.println("number of characters read: " + i); // read characters
+		//System.out.println("message: " + message);
 		return message;
 	}
 	
 	public static String receiveUnstructuredData(Socket socket, int len) throws IOException {
-		System.out.println("receiving unstructured data");
+		//System.out.println("receiving unstructured data");
 		InputStream is = new DataInputStream(socket.getInputStream());
 		byte[] b = new byte[4096];
 		

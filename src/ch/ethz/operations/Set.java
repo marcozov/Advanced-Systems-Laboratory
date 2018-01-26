@@ -30,7 +30,7 @@ public class Set extends Operation {
 		Matcher setMatcher = setPattern.matcher(message);
 
 		while (setMatcher.find()) {
-			System.out.println("set match!");
+			//System.out.println("set match!");
 			// handle set
 			Integer bytes = Integer.parseInt(setMatcher.group(5));
 			Boolean noreply = setMatcher.group(7) != null && setMatcher.group(7).equals(NOREPLY);
@@ -44,7 +44,7 @@ public class Set extends Operation {
 	public String execute() throws UnknownHostException, IOException {
 		String valueToWrite = DataTransfer.receiveUnstructuredData(this.getClient(), this.getNumberOfBytes());
 		String fullCommand = super.getMessage() + valueToWrite + '\r' + '\n';
-		System.out.println("fullCommand: " + fullCommand);
+		//System.out.println("fullCommand: " + fullCommand);
 		Socket clientSocket = super.getClient();
 		List<InetSocketAddress> servers = this.getServers();
 		boolean replyExpected = this.isReplyExpected();

@@ -11,6 +11,7 @@ import ch.ethz.operations.Operation;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.LogManager;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.io.*;
@@ -80,13 +81,15 @@ public class MyMiddleware {
 			try {
 				System.out.println("before socket.accept");
 				clientSocket = socket.accept();
+				// add a new request to the waiting list --> needs to be passed to a worker thread in order to be fulfilled
 				requests.add(clientSocket);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			new OperationThread(clientSocket, this.servers).start();
+			// this should be done by each worker thread
+			//new OperationThread(clientSocket, this.servers).start();
 		}
 		
 	/*

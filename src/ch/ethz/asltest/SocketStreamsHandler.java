@@ -5,23 +5,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class CommunicationHandler {
-	Socket memcachedServerSocket;
+public class SocketStreamsHandler {
+	Socket hostSocket;
 	InputStream is;
 	OutputStream os;
 	
-	public CommunicationHandler(Socket socket) {
-		this.memcachedServerSocket = socket;
+	public SocketStreamsHandler(Socket socket) {
+		this.hostSocket = socket;
 		try {
 			this.is = socket.getInputStream();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
 			this.os = socket.getOutputStream();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -34,7 +32,7 @@ public class CommunicationHandler {
 		return this.os;
 	}
 
-	public Socket getMemcachedServerSocket() {
-		return memcachedServerSocket;
+	public Socket getHostSocket() {
+		return hostSocket;
 	}
 }

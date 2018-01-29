@@ -16,7 +16,6 @@ import ch.ethz.operations.Operation;
 public class WorkerThread extends Thread {
 	// all the threads are going to access the same queue ==> it's a concurrent resource, everyone will simply
 	// take the first available request, when it's free
-	//BlockingQueue<Socket> requests;
 	BlockingQueue<Operation> requests;
 	List<HostWrapper> servers;
 	int idThread;
@@ -33,14 +32,12 @@ public class WorkerThread extends Thread {
 			try {
 				memcachedServerSocket = new Socket(memcachedServerAddress.getAddress().getHostAddress().toString(), memcachedServerAddress.getPort());
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			CommunicationHandler ch = new CommunicationHandler(memcachedServerSocket);
+			SocketStreamsHandler ch = new SocketStreamsHandler(memcachedServerSocket);
 			HostWrapper server = new HostWrapper(memcachedServerAddress, ch);
 			this.servers.add(server);
 		}
@@ -53,10 +50,8 @@ public class WorkerThread extends Thread {
 				// wait until a request is available
 				request = requests.take();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("request that will be fulfilled: " + request + ". Thread: " + this.idThread);
 			try {
 				request.execute(this.servers);
 			} catch (UnknownHostException e) {
@@ -64,7 +59,6 @@ public class WorkerThread extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("request fulfilled: " + request);
 		}
 	}
 }

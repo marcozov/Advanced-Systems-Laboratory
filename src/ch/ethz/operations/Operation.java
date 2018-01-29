@@ -1,45 +1,33 @@
 package ch.ethz.operations;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.ethz.asltest.AbstractServer;
-import ch.ethz.asltest.CommunicationHandler;
+import ch.ethz.asltest.SocketStreamsHandler;
 import ch.ethz.asltest.HostWrapper;
 
 public abstract class Operation {
 	final static String BYTES = "bytes";
 	String message;
-	//Socket client;
-	CommunicationHandler client;
-	//AbstractServer server;
+	SocketStreamsHandler client;
 	Map<String, Object> parameters;
 	
-	//public Operation(String message, Socket clientSocket, AbstractServer server) {
-	public Operation(String message, CommunicationHandler client) {
+	public Operation(String message, SocketStreamsHandler client) {
 		this.message = message;
-		//this.client = clientSocket;
 		this.client = client;
-		//this.server = server;
 		this.parameters = new HashMap<String, Object>();
 	}
 	
 	public abstract String execute(List<HostWrapper> servers) throws UnknownHostException, IOException;
-	// TODO: decide whether the function should return a socket or an address
-	protected abstract void parseParametersAndCheckFormat(String message);
 	
 	public String getMessage() {
 		return this.message;
 	}
 	
-	//public Socket getClient() {
-	public CommunicationHandler getClient() {
+	public SocketStreamsHandler getClient() {
 		return this.client;
 	}
 	
@@ -62,10 +50,4 @@ public abstract class Operation {
 	public Integer getNumberOfBytes() {
 		return (Integer) this.getParameter(BYTES);
 	}
-	
-	// TODO: decide whether this method should be private or public
-	//public AbstractServer getAbstractServer() {
-	//	return this.server;
-	//}
-
 }

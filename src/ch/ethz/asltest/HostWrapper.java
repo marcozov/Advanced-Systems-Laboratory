@@ -4,9 +4,9 @@ import java.net.InetSocketAddress;
 
 public class HostWrapper {
 	InetSocketAddress hostAddress;
-	CommunicationHandler ch;
+	SocketStreamsHandler ch;
 	
-	public HostWrapper(InetSocketAddress hostAddress, CommunicationHandler ch) {
+	public HostWrapper(InetSocketAddress hostAddress, SocketStreamsHandler ch) {
 		this.hostAddress = hostAddress;
 		this.ch = ch;
 	}
@@ -15,7 +15,7 @@ public class HostWrapper {
 		return hostAddress;
 	}
 
-	public CommunicationHandler getCh() {
+	public SocketStreamsHandler getCh() {
 		return ch;
 	}
 	

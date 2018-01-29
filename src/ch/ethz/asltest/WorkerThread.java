@@ -22,7 +22,6 @@ public class WorkerThread extends Thread {
 	
 	public WorkerThread(BlockingQueue<Operation> requests, List<InetSocketAddress> servers, int id) {
 		this.requests = requests;
-		//this.servers = servers;
 		this.idThread = id;
 		this.servers = new ArrayList<HostWrapper>();
 		

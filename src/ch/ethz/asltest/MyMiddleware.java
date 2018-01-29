@@ -3,6 +3,7 @@ package ch.ethz.asltest;
 import java.util.concurrent.BlockingQueue;
 import java.util.ArrayList;
 import ch.ethz.operations.Operation;
+import ch.ethz.operations.RoundRobinToken;
 
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -46,6 +47,7 @@ public class MyMiddleware {
 	
 	public void run() {
 		ServerSocket socket = null;
+		RoundRobinToken rrToken = new RoundRobinToken(this.mcAddresses.size());
 		try {
 			// TODO: close the socket when an interrupt signal is sent
 			socket = new ServerSocket(this.port);

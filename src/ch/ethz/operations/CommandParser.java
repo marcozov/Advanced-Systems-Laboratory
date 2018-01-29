@@ -1,10 +1,12 @@
 package ch.ethz.operations;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.ethz.asltest.AbstractServer;
+import ch.ethz.asltest.CommunicationHandler;
 import ch.ethz.operations.Operation;
 
 public final class CommandParser {
@@ -15,16 +17,17 @@ public final class CommandParser {
 	final static String setRegex = "^(set)\\s([\\w-]+)\\s(\\d+)\\s(-?\\d+)\\s(\\d+)(\\s(noreply))?\r\n";
 	private CommandParser() {}
 	
-	public static Operation getOperation(String message, Socket clientSocket, AbstractServer server) {
+	//public static Operation getOperation(String message, Socket clientSocket, AbstractServer server) throws IOException {
+	public static Operation getOperation(String message, CommunicationHandler client) throws IOException {
 		Pattern getPattern = Pattern.compile(getRegex);
 		Matcher getMatcher = getPattern.matcher(message);
 		while (getMatcher.find()) {
-			return new Get(message, clientSocket, server);
+			return new Get(message, client);
 		}
 		Pattern setPattern = Pattern.compile(setRegex);
 		Matcher setMatcher = setPattern.matcher(message);
 		while (setMatcher.find()) {
-			return new Set(message, clientSocket, server);
+			return new Set(message, client);
 		}
 		return null;
 	}

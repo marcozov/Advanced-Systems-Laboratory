@@ -27,7 +27,7 @@ public class MyMiddleware {
 	String ip;
 	int port;
 	List<InetSocketAddress> mcAddresses;
-	AbstractServer servers;
+	//AbstractServer servers;
 	int numThreadsPTP;
 	boolean readSharded;
 	private static final Logger logger = LogManager.getLogger(MyMiddleware.class);
@@ -50,7 +50,7 @@ public class MyMiddleware {
 			this.mcAddresses.add(socket);
 			System.out.println("Sending stuff to " + socket.getAddress().getHostAddress().toString() + ":" + socket.getPort());
 		}
-		this.servers = new AbstractServer(this.mcAddresses);
+		//this.servers = new AbstractServer(this.mcAddresses);
 		this.numThreadsPTP = numThreadsPTP;
 		this.readSharded = readSharded;
 	}
@@ -63,38 +63,32 @@ public class MyMiddleware {
 		System.out.println(Arrays.toString(mcAddresses.toArray()));
 		ServerSocket socket = null;
 		try {
+			// TODO: close the socket when an interrupt signal is sent
 			socket = new ServerSocket(this.port);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		BlockingQueue<Socket> requests = new LinkedBlockingQueue<Socket>();
-		
+		BlockingQueue<Operation> requests = new LinkedBlockingQueue<Operation>();
 		// start the worker threads
 		for (int i=0; i<this.numThreadsPTP; i++) {
-			new WorkerThread(requests, this.servers, i).start();
+			new WorkerThread(requests, this.mcAddresses, i).start();
 		}
-		
-		// net-thread
+
+		Socket clientSocket = null;
 		while (true) {
-			Socket clientSocket = null;
 			try {
-				//System.out.println("before socket.accept");
+				System.out.println("before socket.accept");
 				clientSocket = socket.accept();
-				System.out.println("New request: " + clientSocket);
-				requests.add(clientSocket);
 				
-				//System.out.println("before printing requests");
-				for (Socket s : requests) {
-					System.out.println(s.toString());
-				}
-				//System.out.println("after printing requests");
+				// this is for taking all the requests from each client and put them in the queue
+				//new ConnectionHandler(clientSocket, requests, this.servers).start();
+				new ConnectionHandler(clientSocket, requests).start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
 }

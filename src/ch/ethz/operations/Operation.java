@@ -6,25 +6,31 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ch.ethz.asltest.AbstractServer;
+import ch.ethz.asltest.CommunicationHandler;
+import ch.ethz.asltest.HostWrapper;
 
 public abstract class Operation {
 	final static String BYTES = "bytes";
 	String message;
-	Socket client;
-	AbstractServer server;
+	//Socket client;
+	CommunicationHandler client;
+	//AbstractServer server;
 	Map<String, Object> parameters;
 	
-	public Operation(String message, Socket clientSocket, AbstractServer server) {
+	//public Operation(String message, Socket clientSocket, AbstractServer server) {
+	public Operation(String message, CommunicationHandler client) {
 		this.message = message;
-		this.client = clientSocket;
-		this.server = server;
+		//this.client = clientSocket;
+		this.client = client;
+		//this.server = server;
 		this.parameters = new HashMap<String, Object>();
 	}
 	
-	public abstract String execute() throws UnknownHostException, IOException;
+	public abstract String execute(List<HostWrapper> servers) throws UnknownHostException, IOException;
 	// TODO: decide whether the function should return a socket or an address
 	protected abstract void parseParametersAndCheckFormat(String message);
 	
@@ -32,7 +38,8 @@ public abstract class Operation {
 		return this.message;
 	}
 	
-	public Socket getClient() {
+	//public Socket getClient() {
+	public CommunicationHandler getClient() {
 		return this.client;
 	}
 	
@@ -57,7 +64,8 @@ public abstract class Operation {
 	}
 	
 	// TODO: decide whether this method should be private or public
-	public AbstractServer getAbstractServer() {
-		return this.server;
-	}
+	//public AbstractServer getAbstractServer() {
+	//	return this.server;
+	//}
+
 }

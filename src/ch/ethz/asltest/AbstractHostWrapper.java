@@ -1,32 +1,24 @@
 package ch.ethz.asltest;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class AbstractServer {
-	//List<InetSocketAddress> mcAddresses;
+public class AbstractHostWrapper {
 	List<HostWrapper> servers;
-	private AtomicInteger getCounter;
 	
-	public AbstractServer(List<HostWrapper> servers) {
+	public AbstractHostWrapper(List<HostWrapper> servers) {
 		this.servers = servers;
-		this.getCounter = new AtomicInteger(0);
 	}
 	
-	//public List<InetSocketAddress> getAllServers() {
 	public List<HostWrapper> getAllServers() {
 		return this.servers;
 	}
 	
 	//TODO: implement round robin policy for GET operations
 	// concurrency should be handled as well
-	//public InetSocketAddress getNextServer() {
 	public HostWrapper getNextServer() {
-		HostWrapper server = this.getAllServers().get((this.getCounter()));
-		return server;
+		HostWrapper mcAddress = this.getAllServers().get((this.getCounter()));
+		return mcAddress;
 	}
 
 	// round-robin load balancer for servers

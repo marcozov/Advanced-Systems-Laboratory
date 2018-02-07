@@ -34,7 +34,7 @@ public class Set extends Operation {
 	}
 
 	@Override
-	public String execute(List<HostWrapper> servers) throws UnknownHostException, IOException {
+	public void execute(List<HostWrapper> servers) throws UnknownHostException, IOException {
 		String fullCommand = super.getMessage() + this.valueToWrite;
 		SocketStreamsHandler client = super.getClient();
 		boolean replyExpected = this.isReplyExpected();
@@ -54,8 +54,6 @@ public class Set extends Operation {
 			OutputStream os = client.getOutputStream();
 			os.write(result.getBytes());
 		}
-		
-		return null;
 	}
 
 	private boolean isErrorMessage(String result) {

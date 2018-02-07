@@ -21,7 +21,7 @@ public abstract class Operation {
 		this.parameters = new HashMap<String, Object>();
 	}
 	
-	public abstract String execute(List<HostWrapper> servers) throws UnknownHostException, IOException;
+	public abstract void execute(List<HostWrapper> servers) throws UnknownHostException, IOException;
 	
 	public String getMessage() {
 		return this.message;

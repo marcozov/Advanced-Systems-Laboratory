@@ -12,9 +12,11 @@ import java.net.InetSocketAddress;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import org.apache.logging.log4j.*;
 
+// run test: memtier_benchmark --protocol=memcache_text -t 4 -c 5 -s 127.0.0.1 -p 11212
 
 public class MyMiddleware {
 	String ip;
@@ -51,6 +53,7 @@ public class MyMiddleware {
 		try {
 			// TODO: close the socket when an interrupt signal is sent
 			socket = new ServerSocket(this.port);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -65,10 +68,7 @@ public class MyMiddleware {
 		while (true) {
 			try {
 				clientSocket = socket.accept();
-				
-				// this is for taking all the requests from each client and put them in the queue
-				// TODO: decide whether to handle this without creating different threads for each client (maybe use nio instead of io?)
-				new ClientRequestsHandler(clientSocket, requests).start();
+				new ClientRequestsHandler(clientSocket, requests, this.readSharded).start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

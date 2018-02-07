@@ -19,15 +19,15 @@ public class WorkerThread extends Thread {
 	BlockingQueue<Operation> requests;
 	List<HostWrapper> servers;
 	int idThread;
-	
-	public WorkerThread(BlockingQueue<Operation> requests, List<InetSocketAddress> servers, int id) {
+
+	public WorkerThread(BlockingQueue<Operation> requests, List<InetSocketAddress> serverAddresses, int id) {
 		this.requests = requests;
 		this.idThread = id;
 		this.servers = new ArrayList<HostWrapper>();
-		
+
 		Socket memcachedServerSocket = null;
 		// the connection with the memcached servers should be opened here
-		for (InetSocketAddress memcachedServerAddress : servers) {
+		for (InetSocketAddress memcachedServerAddress : serverAddresses) {
 			try {
 				memcachedServerSocket = new Socket(memcachedServerAddress.getAddress().getHostAddress().toString(), memcachedServerAddress.getPort());
 			} catch (UnknownHostException e) {
@@ -35,13 +35,13 @@ public class WorkerThread extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			SocketStreamsHandler ch = new SocketStreamsHandler(memcachedServerSocket);
 			HostWrapper server = new HostWrapper(memcachedServerAddress, ch);
 			this.servers.add(server);
 		}
 	}
-	
+
 	public void run() {
 		while (true) {
 			Operation request = null;

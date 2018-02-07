@@ -11,10 +11,12 @@ import ch.ethz.operations.Operation;
 public class ClientRequestsHandler extends Thread {
 	Socket clientSocket;
 	BlockingQueue<Operation> requests;
+	boolean readSharded;
 	
-	public ClientRequestsHandler(Socket clientSocket, BlockingQueue<Operation> requests) {
+	public ClientRequestsHandler(Socket clientSocket, BlockingQueue<Operation> requests, boolean readSharded) {
 		this.clientSocket = clientSocket;
 		this.requests = requests;
+		this.readSharded = readSharded;
 	}
 	
 	public void run() {
@@ -32,7 +34,7 @@ public class ClientRequestsHandler extends Thread {
 			
 			Operation operation = null;
 			try {
-				operation = CommandParser.getOperation(message, client);
+				operation = CommandParser.getOperation(message, client, readSharded);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

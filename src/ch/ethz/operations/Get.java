@@ -10,42 +10,44 @@ import java.util.regex.Pattern;
 import ch.ethz.asltest.SocketStreamsHandler;
 import ch.ethz.asltest.DataTransfer;
 import ch.ethz.asltest.HostWrapper;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Get extends Operation {
 	public Get(String message, SocketStreamsHandler client) {
 		super(message, client);
 	}
-	
+
 	@Override
-	public String execute(List<HostWrapper> servers) throws UnknownHostException, IOException {
+	public void execute(List<HostWrapper> servers) throws UnknownHostException, IOException {
+		executeGet(servers);
+		// can update the right counter
+	}
+
+	public void executeGet(List<HostWrapper> servers) throws UnknownHostException, IOException {
 		int serverIndex = 0;
 
-		Lock lock = new ReentrantLock();
-		lock.lock();
 		RoundRobinToken rrToken = RoundRobinToken.getInstance();
-		if (rrToken.getValue() < rrToken.getSize() - 1) {
-			rrToken.setValue(rrToken.getValue()+1);
-		} else {
-			rrToken.setValue(0);
-		}
 		serverIndex = rrToken.getValue();
-		lock.unlock();
-		if(serverIndex >= rrToken.getSize()) {
-			serverIndex = 0;
-		}
+
 		HostWrapper chosenServer = servers.get(serverIndex);
 		
-		OutputStream out = chosenServer.getCh().getOutputStream();
-		out.write(this.getMessage().getBytes());
+		sendGetRequest(chosenServer, this.getMessage());
+		String fullReply = receiveGetResponse(chosenServer);
 
 		OutputStream os = this.getClient().getOutputStream();
+		os.write(fullReply.getBytes());
+	}
+
+	public void sendGetRequest(HostWrapper chosenServer, String message) throws IOException {
+		OutputStream out = chosenServer.getCh().getOutputStream();
+		out.write(message.getBytes());
+	}
+
+	public String receiveGetResponse(HostWrapper chosenServer) throws IOException {
 		String reply = DataTransfer.receiveTextLine(chosenServer.getCh());
+		String fullReply = reply;
 
 		while (true) {
 			if (reply.equals("END" + '\r' + '\n')) {
-				os.write(reply.getBytes());
 				break;
 			}
 
@@ -56,11 +58,12 @@ public class Get extends Operation {
 			}
 
 			String valueRetrieved = DataTransfer.receiveUnstructuredData(chosenServer.getCh(), super.getNumberOfBytes());
-			os.write((reply + valueRetrieved).getBytes());
+			fullReply += valueRetrieved;
 
 			reply = DataTransfer.receiveTextLine(chosenServer.getCh());
+			fullReply += reply;
 		}
-		
-		return null;
+
+		return fullReply;
 	}
 }

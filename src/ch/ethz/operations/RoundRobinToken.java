@@ -1,8 +1,10 @@
 package ch.ethz.operations;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class RoundRobinToken {
 	private static RoundRobinToken instance = null;
-	private int counter;
+	private AtomicInteger counter;
 	private static int size;
 	
 	private RoundRobinToken() {
@@ -10,7 +12,7 @@ public class RoundRobinToken {
 	}
 	public RoundRobinToken(int size) {
 		RoundRobinToken.instance = new RoundRobinToken();
-		instance.counter = 0;
+		instance.counter = new AtomicInteger(0);
 		RoundRobinToken.size = size;
 	}
 	
@@ -19,11 +21,7 @@ public class RoundRobinToken {
 	}
 	
 	public int getValue() {
-		return instance.counter;
-	}
-	
-	public void setValue(int value) {
-		instance.counter = value;
+		return instance.counter.getAndIncrement() % instance.getSize();
 	}
 	
 	public int getSize() {

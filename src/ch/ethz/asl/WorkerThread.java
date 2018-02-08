@@ -1,4 +1,4 @@
-package ch.ethz.asltest;
+package ch.ethz.asl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,11 +19,13 @@ public class WorkerThread extends Thread {
 	BlockingQueue<Operation> requests;
 	List<HostWrapper> servers;
 	int idThread;
+	List<Operation> completedOperations;
 
 	public WorkerThread(BlockingQueue<Operation> requests, List<InetSocketAddress> serverAddresses, int id) {
 		this.requests = requests;
 		this.idThread = id;
 		this.servers = new ArrayList<HostWrapper>();
+		this.completedOperations = new ArrayList<Operation>();
 
 		Socket memcachedServerSocket = null;
 		// the connection with the memcached servers should be opened here
@@ -48,16 +50,28 @@ public class WorkerThread extends Thread {
 			try {
 				// wait until a request is available
 				request = requests.take();
+				// 3: stop timer for waiting time in the queue
+				request.stopWaitingTimer();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			try {
+				// 4: start timer for service time of memcached servers
+				request.startServiceTimer();
 				request.execute(this.servers);
+				// 4: stop timer for service time of memcached servers
+				request.stopServiceTimer();
+				
+				this.completedOperations.add(request);
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public List<Operation> getCompletedOperations() {
+		return this.completedOperations;
 	}
 }

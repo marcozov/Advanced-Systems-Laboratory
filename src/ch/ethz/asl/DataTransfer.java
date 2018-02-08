@@ -1,4 +1,4 @@
-package ch.ethz.asltest;
+package ch.ethz.asl;
 
 import java.io.IOException;
 import java.io.InputStream;

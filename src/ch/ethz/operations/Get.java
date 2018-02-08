@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.ethz.asltest.SocketStreamsHandler;
-import ch.ethz.asltest.DataTransfer;
-import ch.ethz.asltest.HostWrapper;
+import ch.ethz.asl.DataTransfer;
+import ch.ethz.asl.HostWrapper;
+import ch.ethz.asl.SocketStreamsHandler;
 
 public class Get extends Operation {
 	public Get(String message, SocketStreamsHandler client) {
@@ -65,5 +65,10 @@ public class Get extends Operation {
 		}
 
 		return fullReply;
+	}
+	
+	@Override
+	public String getType() {
+		return "get";
 	}
 }

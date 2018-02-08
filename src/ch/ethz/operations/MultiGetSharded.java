@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.ethz.asltest.HostWrapper;
-import ch.ethz.asltest.SocketStreamsHandler;
+import ch.ethz.asl.HostWrapper;
+import ch.ethz.asl.SocketStreamsHandler;
 
 public class MultiGetSharded extends Get {
 
@@ -60,5 +60,10 @@ public class MultiGetSharded extends Get {
 		}
 		fullReply += "END" + '\r' + '\n';
 		os.write(fullReply.getBytes());
+	}
+	
+	@Override
+	public String getType() {
+		return "multiget";
 	}
 }

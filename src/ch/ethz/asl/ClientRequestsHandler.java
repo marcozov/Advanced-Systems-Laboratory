@@ -1,4 +1,4 @@
-package ch.ethz.asltest;
+package ch.ethz.asl;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -39,6 +39,8 @@ public class ClientRequestsHandler extends Thread {
 				e.printStackTrace();
 			}
 			
+			// 3: start timer for waiting time in the queue 
+			operation.startWaitingTimer();
 			this.requests.add(operation);
 		}
 	}

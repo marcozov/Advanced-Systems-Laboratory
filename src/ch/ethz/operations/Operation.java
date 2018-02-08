@@ -2,18 +2,22 @@ package ch.ethz.operations;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
-import ch.ethz.asltest.SocketStreamsHandler;
-import ch.ethz.asltest.HostWrapper;
+import ch.ethz.asl.HostWrapper;
+import ch.ethz.asl.SocketStreamsHandler;
 
 public abstract class Operation {
 	final static String BYTES = "bytes";
 	String message;
 	SocketStreamsHandler client;
 	Map<String, Object> parameters;
+	long waitingTime;
+	long serviceTime;
 	
 	public Operation(String message, SocketStreamsHandler client) {
 		this.message = message;
@@ -50,4 +54,30 @@ public abstract class Operation {
 	public Integer getNumberOfBytes() {
 		return (Integer) this.getParameter(BYTES);
 	}
+	
+	public void startWaitingTimer() {
+		this.waitingTime = System.nanoTime();
+	}
+	
+	public void stopWaitingTimer() {
+		this.waitingTime = System.nanoTime() - this.waitingTime;
+	}
+	
+	public void startServiceTimer() {
+		this.serviceTime = System.nanoTime();
+	}
+	
+	public void stopServiceTimer() {
+		this.serviceTime = System.nanoTime() - this.serviceTime;
+	}
+	
+	public long getWaitingTime() {
+		return this.waitingTime;
+	}
+	
+	public long getServiceTime() {
+		return this.serviceTime;
+	}
+	
+	public abstract String getType();
 }

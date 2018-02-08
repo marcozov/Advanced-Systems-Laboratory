@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.ethz.asltest.SocketStreamsHandler;
-import ch.ethz.asltest.DataTransfer;
-import ch.ethz.asltest.HostWrapper;
+import ch.ethz.asl.DataTransfer;
+import ch.ethz.asl.HostWrapper;
+import ch.ethz.asl.SocketStreamsHandler;
 
 public class Set extends Operation {
 	final static String REPLY = "reply";
@@ -78,5 +78,10 @@ public class Set extends Operation {
 	
 	private Boolean isReplyExpected() {
 		return (Boolean) super.getParameter(REPLY);
+	}
+	
+	@Override
+	public String getType() {
+		return "set";
 	}
 }

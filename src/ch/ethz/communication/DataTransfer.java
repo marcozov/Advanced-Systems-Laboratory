@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class DataTransfer {
-	public static String receiveTextLine(HostWrapper ch) throws IOException {
-		InputStream is = ch.getInputStream();	
+	public static String receiveTextLine(HostWrapper host) throws IOException {
+		InputStream is = host.getInputStream();
 		byte[] b = new byte[4096];
 		
 		int readByte = is.read();
@@ -32,8 +32,8 @@ public final class DataTransfer {
 		return message;
 	}
 	
-	public static String receiveUnstructuredData(HostWrapper ch, int len) throws IOException {
-		InputStream is = ch.getInputStream();
+	public static String receiveUnstructuredData(HostWrapper host, int len) throws IOException {
+		InputStream is = host.getInputStream();
 		byte[] b = new byte[4096];
 		
 		is.read(b, 0, len+2);

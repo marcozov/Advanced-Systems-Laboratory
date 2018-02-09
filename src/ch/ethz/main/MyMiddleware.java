@@ -81,40 +81,40 @@ public class MyMiddleware {
 					measuringQueueLength = true;
 					QueueLengthMeasurer measurer = new QueueLengthMeasurer(requests);
 					measurer.start();
-					
-					Runtime.getRuntime().addShutdownHook(new Thread() {
-                        @Override
-                        public void run() {
-                            shutdown();
-                        }
 
-                        private void shutdown() {
-                        	Map<String, int[]> operationsCounter = new HashMap<String, int[]>();
-                        	operationsCounter.put("get", new int[] { 0 });
-                        	operationsCounter.put("set", new int[] { 0 });
-                        	operationsCounter.put("multiget", new int[] { 0 });
-                        	
-                        	long experimentDuration = System.nanoTime() - experimentStart;
-                            long totalWaitingTime = 0;
-                            long totalServiceTime = 0;
-                            long completedOperations = 0;
-                            for (WorkerThread workerThread : workerThreads) {
-                            	for(Operation operation : workerThread.getCompletedOperations()) {
-                            		totalWaitingTime += operation.getWaitingTime();
-                            		totalServiceTime += operation.getServiceTime();
-                            		completedOperations++;
-                            		operationsCounter.get(operation.getType())[0]++;
-                            	}
-                            }
-                            
-                            System.out.println("Average queue length: " + measurer.getAverageQueueLength());
-                            System.out.println("Average waiting time: " + totalWaitingTime/completedOperations);
-                            System.out.println("Average service time: " + totalServiceTime/completedOperations);
-                            System.out.println("Average throughput: " + (double)completedOperations/(double)experimentDuration + " operations/timeUnit");
-                            System.out.println("Total number of GET operations: " + operationsCounter.get("get")[0]);
-                            System.out.println("Total number of SET operations: " + operationsCounter.get("set")[0]);
-                            System.out.println("Total number of MULTI-GET operations: " + operationsCounter.get("multiget")[0]);
-                        }
+					Runtime.getRuntime().addShutdownHook(new Thread() {
+						@Override
+						public void run() {
+							shutdown();
+						}
+
+						private void shutdown() {
+							Map<String, int[]> operationsCounter = new HashMap<String, int[]>();
+							operationsCounter.put("get", new int[] { 0 });
+							operationsCounter.put("set", new int[] { 0 });
+							operationsCounter.put("multiget", new int[] { 0 });
+
+							long experimentDuration = System.nanoTime() - experimentStart;
+							long totalWaitingTime = 0;
+							long totalServiceTime = 0;
+							long completedOperations = 0;
+							for (WorkerThread workerThread : workerThreads) {
+								for(Operation operation : workerThread.getCompletedOperations()) {
+									totalWaitingTime += operation.getWaitingTime();
+									totalServiceTime += operation.getServiceTime();
+									completedOperations++;
+									operationsCounter.get(operation.getType())[0]++;
+								}
+							}
+
+							System.out.println("Average queue length: " + measurer.getAverageQueueLength());
+							System.out.println("Average waiting time: " + totalWaitingTime/completedOperations);
+							System.out.println("Average service time: " + totalServiceTime/completedOperations);
+							System.out.println("Average throughput: " + (double)completedOperations/(double)experimentDuration + " operations/timeUnit");
+							System.out.println("Total number of GET operations: " + operationsCounter.get("get")[0]);
+							System.out.println("Total number of SET operations: " + operationsCounter.get("set")[0]);
+							System.out.println("Total number of MULTI-GET operations: " + operationsCounter.get("multiget")[0]);
+						}
 					});
 				}
 				new ClientRequestsHandler(clientSocket, requests, this.readSharded).start();

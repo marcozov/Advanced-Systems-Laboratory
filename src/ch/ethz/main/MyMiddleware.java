@@ -1,4 +1,4 @@
-package ch.ethz.asl;
+package ch.ethz.main;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class MyMiddleware {
 	}
 	
 	public MyMiddleware(String ip, int port, List<String> mcAddresses, int numThreadsPTP, boolean readSharded) throws UnknownHostException {
-		logger.error("testing log");
+		logger.error("testing log 1");
 		logger.info("info test 2");
 		this.ip = ip;
 		this.port = port;

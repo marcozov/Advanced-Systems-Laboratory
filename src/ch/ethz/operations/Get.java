@@ -7,19 +7,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.ethz.asl.DataTransfer;
-import ch.ethz.asl.HostWrapper;
-import ch.ethz.asl.SocketStreamsHandler;
+import ch.ethz.communication.DataTransfer;
+import ch.ethz.communication.HostWrapper;
 
 public class Get extends Operation {
-	public Get(String message, SocketStreamsHandler client) {
+	public Get(String message, HostWrapper client) {
 		super(message, client);
 	}
 
 	@Override
 	public void execute(List<HostWrapper> servers) throws UnknownHostException, IOException {
 		executeGet(servers);
-		// can update the right counter
 	}
 
 	public void executeGet(List<HostWrapper> servers) throws UnknownHostException, IOException {
@@ -38,12 +36,12 @@ public class Get extends Operation {
 	}
 
 	public void sendGetRequest(HostWrapper chosenServer, String message) throws IOException {
-		OutputStream out = chosenServer.getCh().getOutputStream();
+		OutputStream out = chosenServer.getOutputStream();
 		out.write(message.getBytes());
 	}
 
 	public String receiveGetResponse(HostWrapper chosenServer) throws IOException {
-		String reply = DataTransfer.receiveTextLine(chosenServer.getCh());
+		String reply = DataTransfer.receiveTextLine(chosenServer);
 		String fullReply = reply;
 
 		while (true) {
@@ -57,10 +55,10 @@ public class Get extends Operation {
 				super.setNumberOfBytes(Integer.parseInt(getReplyMatcher.group(4)));
 			}
 
-			String valueRetrieved = DataTransfer.receiveUnstructuredData(chosenServer.getCh(), super.getNumberOfBytes());
+			String valueRetrieved = DataTransfer.receiveUnstructuredData(chosenServer, super.getNumberOfBytes());
 			fullReply += valueRetrieved;
 
-			reply = DataTransfer.receiveTextLine(chosenServer.getCh());
+			reply = DataTransfer.receiveTextLine(chosenServer);
 			fullReply += reply;
 		}
 

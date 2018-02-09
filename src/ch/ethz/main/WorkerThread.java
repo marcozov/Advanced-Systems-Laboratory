@@ -1,4 +1,4 @@
-package ch.ethz.asl;
+package ch.ethz.main;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,8 +7,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-//import java.util.AbstractQueue;
 
+import ch.ethz.communication.HostWrapper;
 import ch.ethz.operations.Operation;
 
 // create N istances of this class at the beginning of execution
@@ -38,8 +38,7 @@ public class WorkerThread extends Thread {
 				e.printStackTrace();
 			}
 
-			SocketStreamsHandler ch = new SocketStreamsHandler(memcachedServerSocket);
-			HostWrapper server = new HostWrapper(memcachedServerAddress, ch);
+			HostWrapper server = new HostWrapper(memcachedServerSocket);
 			this.servers.add(server);
 		}
 	}

@@ -2,24 +2,21 @@ package ch.ethz.operations;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 
-import ch.ethz.asl.HostWrapper;
-import ch.ethz.asl.SocketStreamsHandler;
+import ch.ethz.communication.HostWrapper;
 
 public abstract class Operation {
 	final static String BYTES = "bytes";
 	String message;
-	SocketStreamsHandler client;
+	HostWrapper client;
 	Map<String, Object> parameters;
 	long waitingTime;
 	long serviceTime;
 	
-	public Operation(String message, SocketStreamsHandler client) {
+	public Operation(String message, HostWrapper client) {
 		this.message = message;
 		this.client = client;
 		this.parameters = new HashMap<String, Object>();
@@ -31,7 +28,7 @@ public abstract class Operation {
 		return this.message;
 	}
 	
-	public SocketStreamsHandler getClient() {
+	public HostWrapper getClient() {
 		return this.client;
 	}
 	

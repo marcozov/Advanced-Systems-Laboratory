@@ -1,6 +1,5 @@
 package ch.ethz.operations;
 
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
@@ -8,16 +7,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.ethz.asl.DataTransfer;
-import ch.ethz.asl.HostWrapper;
-import ch.ethz.asl.SocketStreamsHandler;
+import ch.ethz.communication.DataTransfer;
+import ch.ethz.communication.HostWrapper;
 
 public class Set extends Operation {
 	final static String REPLY = "reply";
 	final static String NOREPLY = "noreply";
 	String valueToWrite;
 	
-	public Set(String message, SocketStreamsHandler client) throws IOException {
+	public Set(String message, HostWrapper client) throws IOException {
 		super(message, client);
 		String setRegex = CommandParser.setRegex;
 		Pattern setPattern = Pattern.compile(setRegex);
@@ -36,14 +34,14 @@ public class Set extends Operation {
 	@Override
 	public void execute(List<HostWrapper> servers) throws UnknownHostException, IOException {
 		String fullCommand = super.getMessage() + this.valueToWrite;
-		SocketStreamsHandler client = super.getClient();
+		HostWrapper client = super.getClient();
 		boolean replyExpected = this.isReplyExpected();
 		String result = null;
 		for (HostWrapper server : servers) {
-			OutputStream out = server.getCh().getOutputStream();
+			OutputStream out = server.getOutputStream();
 			out.write(fullCommand.getBytes());
 			if (isReplyExpected()) {
-				result = DataTransfer.receiveTextLine(server.getCh());
+				result = DataTransfer.receiveTextLine(server);
 			}
 			if (result != null && isErrorMessage(result)) {
 				break;

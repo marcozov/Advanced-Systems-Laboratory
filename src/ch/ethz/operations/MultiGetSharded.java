@@ -8,12 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.ethz.asl.HostWrapper;
-import ch.ethz.asl.SocketStreamsHandler;
+import ch.ethz.communication.HostWrapper;
 
 public class MultiGetSharded extends Get {
 
-	public MultiGetSharded(String message, SocketStreamsHandler client) {
+	public MultiGetSharded(String message, HostWrapper client) {
 		super(message, client);
 	}
 

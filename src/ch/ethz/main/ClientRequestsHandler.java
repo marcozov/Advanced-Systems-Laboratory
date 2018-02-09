@@ -1,9 +1,11 @@
-package ch.ethz.asl;
+package ch.ethz.main;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 
+import ch.ethz.communication.DataTransfer;
+import ch.ethz.communication.HostWrapper;
 import ch.ethz.operations.CommandParser;
 import ch.ethz.operations.Operation;
 
@@ -20,7 +22,7 @@ public class ClientRequestsHandler extends Thread {
 	}
 	
 	public void run() {
-		SocketStreamsHandler client = new SocketStreamsHandler(this.clientSocket);
+		HostWrapper client = new HostWrapper(this.clientSocket);
 		String message = null;
 		while (true) {
 			try {

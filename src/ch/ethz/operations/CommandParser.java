@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.ethz.asl.SocketStreamsHandler;
+import ch.ethz.communication.HostWrapper;
 import ch.ethz.operations.Operation;
 
 public final class CommandParser {
@@ -13,7 +13,7 @@ public final class CommandParser {
 	final static String getReplyRegex = "^(VALUE)\\s([\\w-]+)\\s(\\d+)\\s(\\d+)\r\n";
 	final static String setRegex = "^(set)\\s([\\w-]+)\\s(\\d+)\\s(-?\\d+)\\s(\\d+)(\\s(noreply))?\r\n";
 	
-	public static Operation getOperation(String message, SocketStreamsHandler client, boolean readSharded) throws IOException {
+	public static Operation getOperation(String message, HostWrapper client, boolean readSharded) throws IOException {
 		Pattern getPattern = Pattern.compile(getRegex);
 		Matcher getMatcher = getPattern.matcher(message);
 		while (getMatcher.find()) {

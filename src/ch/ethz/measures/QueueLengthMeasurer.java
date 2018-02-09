@@ -1,6 +1,5 @@
 package ch.ethz.measures;
 
-import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 
 import ch.ethz.operations.Operation;
